@@ -1,1 +1,5 @@
-# Nothing here yet...
+require "rubygems"
+require "bundler"
+
+Bundler.setup
+Bundler.require

@@ -1,20 +1,34 @@
 require "ripper"
 
+require "single_quote/source_line"
 require "single_quote/token"
 require "single_quote/token_sequence"
 
 module SingleQuote
   class SourceFile
+    DOUBLE_QUOTE = "\""
+
+    attr_reader :source
+
     def initialize(source)
       @source = source
     end
 
-    def fix!
-      # For each
+    def fixed_source
+      source_lines.tap do |source_lines|
+        single_quoted_strings.map(&:line_patches).each do |line_patch|
+          new_line = line_patch.patch(source_lines[line_patch.row])
+          source_lines[line_patch.row] = new_line
+        end
+      end.join
+    end
+
+    def source_lines
+      source.lines.to_a
     end
 
     def single_quoted_strings
-      token_sequences.map(&:single_quoted_string).flatten
+      token_sequences.map(&:single_quoted_string).compact
     end
 
     def token_sequences

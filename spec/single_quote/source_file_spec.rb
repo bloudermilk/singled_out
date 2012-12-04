@@ -3,13 +3,59 @@ require "spec_helper"
 require "single_quote/source_file"
 
 describe SingleQuote::SourceFile do
+  subject { described_class.new(source) }
+
+  describe "#fixed_source" do
+    context "with a basic string" do
+      let(:source) { "'hello'" }
+
+      it "replaces double quotes with single quotes" do
+        subject.fixed_source.should eq('"hello"')
+      end
+    end
+
+    context "when a string contains some escaped characters" do
+      let(:source) { '\'hello\nworld\'' }
+
+      it "replaces the string" do
+        subject.fixed_source.should eq('"hello\\\nworld"')
+      end
+    end
+
+    context "when a string spans multiple lines" do
+      let(:source) { "puts 'foo hello\nbar baz'" }
+
+      it "replaces the string" do
+        subject.fixed_source.should eq("puts \"foo hello\nbar baz\"")
+      end
+    end
+  end
+
   describe "#single_quoted_strings" do
-    it "returns an array of SingleQuotedString's"
-    it "works with quotes with no contents"
+    let(:source) { "'foo' + ''" }
+
+    it "returns all the single quoted string" do
+      subject.single_quoted_strings.should have(2).items
+    end
+
+    it "returns an array of SingleQuotedString's" do
+      subject.single_quoted_strings.each do |item|
+        item.should be_an_instance_of(SingleQuote::SingleQuotedString)
+      end
+    end
+  end
+
+  describe "#tokens" do
+    let(:source) { "'" }
+
+    it "returns an array of tokens" do
+      subject.tokens.should have(1).item
+      subject.tokens.first.should be_an_instance_of(SingleQuote::Token)
+    end
   end
 
   describe "#token_sequences" do
-    subject { SingleQuote::SourceFile.new("") }
+    let(:source) { "" }
 
     context "when there are no tokens in the source file" do
       before { subject.stub(tokens: Array.new) }

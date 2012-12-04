@@ -9,17 +9,21 @@ module SingleQuote
     attr_reader :position, :type, :contents
 
     def initialize(position, type, contents)
-      @position = postition
+      @position = position
       @type = type
       @contents = contents
     end
 
     def single_quoted_string_start?
-       string_start? && single_quote?
+      string_start? && single_quote?
     end
 
     def single_quoted_string_end?
       string_end? && single_quote?
+    end
+
+    def string_contents?
+      type == STRING_CONTENTS_TYPE
     end
 
     def string_start?
@@ -28,10 +32,6 @@ module SingleQuote
 
     def string_end?
       type == STRING_END_TYPE
-    end
-
-    def string_contents?
-      type == STRING_CONTENTS_TYPE
     end
 
     def single_quote?
