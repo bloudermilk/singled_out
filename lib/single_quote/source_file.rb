@@ -1,6 +1,5 @@
 require "ripper"
 
-require "single_quote/source_line"
 require "single_quote/token"
 require "single_quote/token_sequence"
 
@@ -16,15 +15,19 @@ module SingleQuote
 
     def fixed_source
       source_lines.tap do |source_lines|
-        single_quoted_strings.map(&:line_patches).each do |line_patch|
-          new_line = line_patch.patch(source_lines[line_patch.row])
-          source_lines[line_patch.row] = new_line
+        line_patches.each do |line_patch|
+          new_line = line_patch.apply(source_lines[line_patch.row - 1])
+          source_lines[line_patch.row - 1] = new_line
         end
-      end.join
+      end.join($/)
     end
 
     def source_lines
-      source.lines.to_a
+      source.split($/)
+    end
+
+    def line_patches
+      single_quoted_strings.map(&:line_patches).flatten
     end
 
     def single_quoted_strings

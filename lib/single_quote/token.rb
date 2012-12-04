@@ -37,5 +37,13 @@ module SingleQuote
     def single_quote?
       contents == SINGLE_QUOTE
     end
+
+    def row
+      position[0]
+    end
+
+    def column
+      position[1]
+    end
   end
 end

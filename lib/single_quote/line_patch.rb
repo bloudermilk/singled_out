@@ -7,4 +7,10 @@ class SingleQuote::LinePatch
     @length = length
     @contents = contents
   end
+
+  def apply(string)
+    string.dup.tap do |new_string|
+      new_string[column, length] = contents
+    end
+  end
 end

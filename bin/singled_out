@@ -1,0 +1,5 @@
+#!/usr/bin/env ruby
+
+require "single_quote"
+
+puts ARGV

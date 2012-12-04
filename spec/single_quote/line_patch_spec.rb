@@ -3,12 +3,12 @@ require "spec_helper"
 require "single_quote/line_patch"
 
 describe SingleQuote::LinePatch do
-  describe "#patch" do
-    subject { described_class.new(double, 2, 4, "hello world") }
-    let(:source_line) { mock() }
+  describe "#apply" do
+    subject { described_class.new(double, 8, 2, "hello world") }
+    let(:source_line) { "replace me, fool" }
 
-    it "should return a new SourceLine object" do
-      subject.patch(source_line).should be_an_instance_of(SourceLine)
+    it "replaces the relevant contents of the passed string" do
+      subject.apply(source_line).should eq("replace hello world, fool")
     end
   end
 end

@@ -89,4 +89,12 @@ describe SingleQuote::SourceFile do
       end
     end
   end
+
+  describe "#source_lines" do
+    subject { described_class.new("'hello\nworld'") }
+
+    it "returns an array of String objects for each line of #source" do
+      subject.source_lines.should eq(%W['hello world'])
+    end
+  end
 end
