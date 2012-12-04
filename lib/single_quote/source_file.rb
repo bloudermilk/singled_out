@@ -61,7 +61,7 @@ module SingleQuote
     end
 
     def trailing_newlines
-      source[TRAILNG_NEWLINE_REGEXP, 0]
+      source[TRAILING_NEWLINE_REGEXP, 0]
     end
   end
 end
