@@ -2,4 +2,6 @@
 
 require "single_quote"
 
-puts ARGV
+ARGV.each do |path|
+  SingleQuote.fix_file(path)
+end
