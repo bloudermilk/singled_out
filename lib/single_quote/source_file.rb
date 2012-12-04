@@ -6,6 +6,7 @@ require "single_quote/token_sequence"
 module SingleQuote
   class SourceFile
     DOUBLE_QUOTE = "\""
+    TRAILING_NEWLINE_REGEXP = /\n+\z/
 
     attr_reader :source
 
@@ -14,12 +15,18 @@ module SingleQuote
     end
 
     def fixed_source
+      fixed_source_lines.join($/).tap do |fixed_source|
+        fixed_source << trailing_newlines if trailing_newlines?
+      end
+    end
+
+    def fixed_source_lines
       source_lines.tap do |source_lines|
         line_patches.each do |line_patch|
           new_line = line_patch.apply(source_lines[line_patch.row - 1])
           source_lines[line_patch.row - 1] = new_line
         end
-      end.join($/)
+      end
     end
 
     def source_lines
@@ -47,6 +54,14 @@ module SingleQuote
       Ripper.lex(source).map do |raw_token|
         Token.new(*raw_token)
       end
+    end
+
+    def trailing_newlines?
+      !!trailing_newlines
+    end
+
+    def trailing_newlines
+      source[TRAILNG_NEWLINE_REGEXP, 0]
     end
   end
 end
