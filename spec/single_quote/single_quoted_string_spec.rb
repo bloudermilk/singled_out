@@ -95,7 +95,7 @@ describe SingleQuote::SingleQuotedString do
 
       specify "control sequences" do
         should_escape("\\c4", "\\\\c4")
-        should_escape("\\C4", "\\\\C4")
+        should_escape("\\C-4", "\\\\C-4")
       end
 
       specify "meta sequences" do

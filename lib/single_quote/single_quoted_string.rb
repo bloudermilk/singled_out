@@ -2,6 +2,18 @@ require "single_quote/line_patch"
 
 module SingleQuote
   class SingleQuotedString
+    ESCAPE_REGEXP = Regexp.union([
+      /\\[abefnrstv]/,
+      /#/,
+      /"/,
+      /\\\d{3}/,
+      /\\x[a-fA-F0-9]{2}/,
+      /\\u\d{4}/,
+      /\\c\d/,
+      /\\C-\d/,
+      /\\M-\d?/
+    ])
+
     attr_reader :start_token, :contents_token, :end_token
 
     def initialize(start_token, end_token, contents_token = nil)
@@ -15,21 +27,9 @@ module SingleQuote
     end
 
     def new_contents
-      new_string = ""
-
-      contents.each_char.each_with_index do |char, index|
-        if char == "\\"
-          new_string << "\\\\"
-        elsif char == "\""
-          new_string << "\\\""
-        elsif char == "#"
-          new_string << "\\#"
-        else
-          new_string << char
-        end
+      contents.gsub(ESCAPE_REGEXP) do |match|
+        "\\#{match}"
       end
-
-      new_string
     end
 
     def double_quoted_string
