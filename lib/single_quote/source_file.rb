@@ -51,7 +51,7 @@ module SingleQuote
     end
 
     def tokens
-      Ripper.lex(source).map do |raw_token|
+      @tokens ||= Ripper.lex(source).map do |raw_token|
         Token.new(*raw_token)
       end
     end
