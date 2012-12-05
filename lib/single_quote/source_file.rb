@@ -51,8 +51,19 @@ module SingleQuote
     end
 
     def tokens
-      @tokens ||= Ripper.lex(source).map do |raw_token|
-        Token.new(*raw_token)
+      line = 0
+      cumulative_length = 0
+
+      @tokens ||= Ripper.lex(source).map do |position, type, contents|
+        if line != position[0]
+          line = position[0]
+          cumulative_length = 0
+        end
+
+        position[1] = cumulative_length
+        cumulative_length += contents.length
+
+        Token.new(position, type, contents)
       end
     end
 

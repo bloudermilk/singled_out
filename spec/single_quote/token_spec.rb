@@ -18,7 +18,7 @@ describe SingleQuote::Token do
       end
 
       context "when the contents are a double quote" do
-        let(:contents) { '"' }
+        let(:contents) { "\"" }
 
         it "returns false" do
           subject.should_not be_single_quoted_string_start
