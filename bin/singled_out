@@ -3,5 +3,9 @@
 require "single_quote"
 
 ARGV.each do |path|
-  SingleQuote.fix_file(path)
+  if File.exist?(path)
+    SingleQuote.fix_file(path)
+  else
+    puts "File not found. Skipping: #{path}"
+  end
 end
