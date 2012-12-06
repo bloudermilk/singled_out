@@ -1,5 +1,7 @@
 # SingleQuote
 
+[![Build Status](https://secure.travis-ci.org/bloudermilk/singled_out.png)](https://travis-ci.org/bloudermilk/singled_out)
+
 TODO: Write a gem description
 
 ## Installation
