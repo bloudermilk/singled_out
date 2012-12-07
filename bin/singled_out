@@ -1,12 +1,58 @@
 #!/usr/bin/env ruby
 
+#
+# Dependencies
+#
+
+require "optparse"
+
 require "single_quote"
 
-ARGV.each do |path|
+
+#
+# Configuration
+#
+
+STDOUT.sync = true
+
+options = {
+  test: nil
+}
+
+parser = OptionParser.new do |opts|
+  opts.banner = "Usage: single [options] file ..."
+
+  opts.on("--test TEST", "Ensure TEST passes after fixing each file") do |test|
+    options[:test] = test
+  end
+end
+
+parser.parse!
+
+# OptionParser takes everything but the mentioned files
+files = ARGV
+
+
+#
+# Action
+#
+
+files.each do |path|
   if File.exist?(path)
-    puts "Checking #{path}"
-    SingleQuote.fix_file(path)
+    puts "Found %s" % path
+
+    if SingleQuote.fix_file(path)
+      puts "Fixed."
+
+      if options[:test] && !system(options[:test])
+        abort "Test failed"
+      else
+        puts "Test passed"
+      end
+    else
+      puts "No single quoted strings found."
+    end
   else
-    puts "File not found. Skipping: #{path}"
+    puts "File not found. Skipping: %s" % path
   end
 end

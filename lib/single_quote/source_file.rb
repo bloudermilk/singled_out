@@ -38,7 +38,9 @@ module SingleQuote
     end
 
     def single_quoted_strings
-      token_sequences.map(&:single_quoted_string).compact
+      @single_quoted_strings ||= token_sequences.
+        map(&:single_quoted_string).
+        compact
     end
 
     def token_sequences
@@ -73,6 +75,10 @@ module SingleQuote
 
     def trailing_newlines
       source[TRAILING_NEWLINE_REGEXP, 0]
+    end
+
+    def single_quoted_strings?
+      single_quoted_strings.any?
     end
   end
 end
