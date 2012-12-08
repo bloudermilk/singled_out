@@ -44,10 +44,12 @@ files.each do |path|
     if SingleQuote.fix_file(path)
       puts "Fixed."
 
-      if options[:test] && !system(options[:test])
-        abort "Test failed"
-      else
-        puts "Test passed"
+      if options[:test]
+        if system(options[:test])
+          puts "Test passed"
+        else
+          abort "Test failed"
+        end
       end
     else
       puts "No single quoted strings found."

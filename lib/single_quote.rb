@@ -1,13 +1,13 @@
-require "single_quote/source_file"
+require "single_quote/program"
 require "single_quote/version"
 
 module SingleQuote
   def self.fix_file(file)
     contents = File.read(file)
-    source_file = SourceFile.new(contents)
+    program = Program.new(contents)
 
-    if source_file.single_quoted_strings?
-      File.open(file, "w") { |f| f.write(source_file.fixed_source) }
+    if program.changes?
+      File.open(file, "w") { |f| f.write(program.patched_source) }
 
       true
     else

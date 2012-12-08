@@ -1,15 +1,16 @@
 module SingleQuote
   class Token
     STRING_START_TYPE = :on_tstring_beg
-    STRING_CONTENTS_TYPE = :on_tstring_content
     STRING_END_TYPE = :on_tstring_end
+    STRING_CONTENTS_TYPE = :on_tstring_content
+    SYMBOL_START_TYPE = :on_symbeg
 
     SINGLE_QUOTE = "'"
+    SINGLE_QUOTED_SYMBOL = ":'"
 
-    attr_reader :position, :type, :contents
+    attr_reader :type, :contents
 
-    def initialize(position, type, contents)
-      @position = position
+    def initialize(type, contents)
       @type = type
       @contents = contents
     end
@@ -22,10 +23,6 @@ module SingleQuote
       string_end? && single_quote?
     end
 
-    def string_contents?
-      type == STRING_CONTENTS_TYPE
-    end
-
     def string_start?
       type == STRING_START_TYPE
     end
@@ -34,16 +31,16 @@ module SingleQuote
       type == STRING_END_TYPE
     end
 
+    def string_contents?
+      type == STRING_CONTENTS_TYPE
+    end
+
     def single_quote?
       contents == SINGLE_QUOTE
     end
 
-    def row
-      position[0]
-    end
-
-    def column
-      position[1]
+    def single_quoted_symbol_start?
+      contents == SINGLE_QUOTED_SYMBOL && type == SYMBOL_START_TYPE
     end
   end
 end
